@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reflect-Diary</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script th:src="@{/js/script.js}" defer></script>
+</head>
+<body>
+<main class="page-wrapper">
+    <div class="container">
+        <a th:href="@{/}">
+            <h1>Reflect-Diary</h1>
+        </a>
+        <div class="profile__content">
+            <div class="profile__info">
+                <div class="profile__card">
+                    <img th:src="@{/images/avatar-default.png}" alt="avatar.png">
+                    <h3 th:text="${user.username}">Имя</h3>
+                    <p>Почта:
+                        <span th:text="${user.email}"></span>
+                    </p>
+                    <p>
+                        Дата регистрации:
+                        <span th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy HH:mm')}"></span>
+                    </p>
+                </div>
+
+                <div class="profile__create-links--wrapper">
+                    <a class="profile__create-link" th:href="@{/goals/create}">Создать новую цель</a>
+                    <a class="profile__create-link" th:href="@{/entries/create}">Создать новую запись</a>
+                </div>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="profile__logout-link">Выйти</button>
+                </form>
+            </div>
+
+            <div class="profile__activity">
+                <div class="profile__goals">
+                    <h2>Ваши цели</h2>
+                    <ul class="goals__list" th:if="${goals != null}">
+                        <li class="goal__item" th:each="goal : ${goals}">
+                            <div class="goal__top">
+                                <p class="goal__help-text">Срок:
+                                    <span class="goal__date" th:text="${#temporals.format(goal.deadline, 'dd.MM.yyyy')}">2025-05-17</span></p>
+                                <form th:action="@{/goals/{id}/toggle(id=${goal.id})}" method="post">
+                                    <button type="submit" class="goal__status"
+                                            th:text="${goal.completed ? '✓ Completed' : '⏳ In progress'}"
+                                            th:classappend="${goal.completed ? ' completed' : ' in-progress'}">
+                                    </button>
+                                </form>
+
+                            </div>
+                            <p class="goal__help-text">Описание цели: </p>
+                            <p class="goal__desc" th:text="${goal.description}">Описание</p>
+                        </li>
+                    </ul>
+                    <a class="goals__link" th:href="@{/goals}"> Показать все цели</a>
+                </div>
+                <div class="profile__entries">
+                    <h2>Ваши записи</h2>
+                    <ul class="entries__list" th:if="${entries != null}">
+                        <li class="entry__item" th:each="entry : ${entries}">
+                            <div class="entry__top">
+                                <p class="entry__help-text">Дата:
+                                    <span class="entry__date" th:text="${#temporals.format(entry.date, 'dd.MM.yyyy')}"></span>
+                                </p>
+                                <div class="entry__mood" th:classappend="'mood-' + ${entry.mood}" th:text="${entry.mood}">Счастливый</div>
+                            </div>
+                            <p class="entry__help-text">Ваш день: </p>
+                            <p class="entry__desc" th:text="${entry.mainText}">Ваш день</p>
+                        </li>
+                    </ul>
+                    <a class="entries__link" th:href="@{/entries}">Показать все записи</a>
+                </div>
+            </div>
+            <div class="profile__sidebar profile__sidebar--right">
+                <div class="calendar-widget">
+                    <h3>Календарь настроения</h3>
+                    <table class="calendar-table">
+                        <thead>
+                        <tr>
+                            <th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="week : ${calendarWeeks}">
+                            <td th:each="day : ${week}"
+                                th:classappend="${day.today} ? 'today' : ''">
+                                <span th:text="${day.dayOfMonth}"></span>
+                                <br/>
+                                <span th:if="${day.entry != null and day.entry.date != null and moodByDate[day.entry.date] != null}" th:text="${moodByDate[day.entry.date]}"></span>
+                                <span th:if="${day.entry != null and day.entry.date != null and moodByDate[day.entry.date] == null}">
+                                    <span th:switch="${day.entry.mood}">
+                                        <span th:case="'HAPPY'">😊</span>
+                                        <span th:case="'SAD'">😢</span>
+                                        <span th:case="'NEUTRAL'">😐</span>
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<div style="height: 40px;"></div>
+</body>
+</html>
