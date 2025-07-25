@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reflect-Diary</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script th:src="@{/js/script.js}" defer></script>
+</head>
+<body>
+<main class="container">
+    <a th:href="@{/}">
+        <h1>Reflect-Diary</h1>
+    </a>
+    <h2>Ваши цели</h2>
+    <a class="profile__create-link" th:href="@{/goals/create}">Создать цель</a>
+    <a th:href="@{/}" class="back-link">← Вернуться назад</a>
+    <ul class="goals__list" th:if="${goals != null}">
+        <li class="goal__item" th:each="goal : ${goals}">
+            <div class="goal__info--wrapper">
+                <div class="goal__top">
+                    <p class="goal__help-text">Дедлайн:
+                        <span class="goal__date"
+                              th:text="${#temporals.format(goal.deadline, 'dd.MM.yyyy')}">2025-05-17</span></p>
+                    <form th:action="@{'/goals/' + ${goal.id} + '/toggle'}" method="post">
+                        <button type="submit" class="goal__status"
+                                th:text="${goal.completed ? '✓ Completed' : '⏳ In progress'}"
+                                th:classappend="${goal.completed ? ' completed' : ' in-progress'}">
+                        </button>
+                    </form>
+
+                </div>
+                <p class="goal__help-text">Описание цели: </p>
+                <p class="goal__desc" th:text="${goal.description}">Описание</p>
+                <div class="goal__action-buttons">
+                    <form th:action="@{'/goals/+' + ${goal.id} + '/delete'}" method="post">
+                        <button type="submit" class="delete__button">Удалить</button>
+                    </form>
+                    <a th:href="@{'/goals/' + ${goal.id} + '/edit'}">Редактировать</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</main>
+<div style="height: 40px;"></div>
+</body>
+</html>

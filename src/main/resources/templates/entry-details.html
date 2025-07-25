@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reflect-Diary</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script th:src="@{/js/script.js}" defer></script>
+</head>
+<body>
+<main class="container entry-details">
+    <a th:href="@{/}">
+        <h1>Reflect-Diary</h1>
+    </a>
+    <div class="entry-details__content">
+        <div class="entry-details__info">
+            <h2>Детали записи за <span th:text="${#temporals.format(entry.date, 'dd.MM.yyyy')}">Дата</span></h2>
+            <p>В этот день у вас было настроение: <strong th:text="${entry.mood}"></strong>.</p>
+            <p>Вы оценили этот день на: <strong th:text="${entry.score}"></strong> баллов.</p>
+            <h3>Ваши размышления:</h3>
+            <p th:text="${entry.mainText}">У вас был хороший день!</p>
+
+            <div th:if="${entry.difficulties != null and !entry.difficulties.isEmpty()}">
+                <h3>Трудности:</h3>
+                <p th:text="${entry.difficulties}"></p>
+            </div>
+
+            <div th:if="${entry.highlights != null and !entry.highlights.isEmpty()}">
+                <h3>Главные события дня:</h3>
+                <p th:text="${entry.highlights}"></p>
+            </div>
+
+            <div th:if="${entry.tomorrowPlan != null and !entry.tomorrowPlan.isEmpty()}">
+                <h3>Планы на завтра:</h3>
+                <p th:text="${entry.tomorrowPlan}"></p>
+            </div>
+
+            <div th:if="${entry.questionAnswer != null and !entry.questionAnswer.isEmpty()}">
+                <h3>Ответ на вопрос для размышления:</h3>
+                <strong th:text="${reflectionQuestion.text}"></strong>
+                <p th:text="${entry.questionAnswer}"></p>
+            </div>
+
+            <div th:if="${entry.tags != null and !entry.tags.isEmpty()}">
+                <h3>Tags:</h3>
+                <div th:each="tag : ${tags}" class="tag__item">
+                    <p th:text="${tag.name}">Name</p>
+                </div>
+            </div>
+
+        </div>
+        <a th:href="@{/entries}" class="back-link">← Back to entries</a>
+        <div class="entry__action-buttons">
+            <form th:action="@{'/entries/+' + ${entry.id} + '/delete'}" method="post">
+                <button type="submit" class="delete__button">Delete</button>
+            </form>
+            <a th:href="@{'/entries/' + ${entry.id} + '/edit'}">Edit</a>
+        </div>
+    </div>
+</main>
+<div style="height: 40px;"></div>
+</body>
+</html>

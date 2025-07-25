@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reflect-Diary</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script th:src="@{/js/script.js}" defer></script>
+</head>
+<body>
+<main>
+    <div class="container register__content">
+        <h1>Создать аккаунт</h1>
+        <div th:if="${param.error}" class="alert alert-danger">
+            <p style="color: red">Неправильный ввод данных</p>
+        </div>
+        <form class="register__form" th:action="@{/auth/register}" method="POST" th:object="${user}">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="username" th:field="*{username}" required minlength="2"
+                   maxlength="50"/>
+            <label for="email">Email</label>
+            <input type="text" id="email" placeholder="email" th:field="*{email}" required minlength="3"
+                   maxlength="100"/>
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="password" th:field="*{password}" required minlength="6"
+                   maxlength="100"/>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <p class="register__text">Есть аккаунт? <a th:href="@{/auth/login}">Войти</a></p>
+    </div>
+</main>
+
+</body>
+</html>

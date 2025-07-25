@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reflect-Diary</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+
+</head>
+<body>
+<main>
+    <div class="create-goal__content container">
+        <a th:href="@{/}">
+            <h1>Reflect-Diary</h1>
+        </a>
+        <div class="create-goal__form--wrapper">
+            <div><h2>Создание/Редактирование цели</h2></div>
+            <form th:object="${goal}"
+                  th:action="@{${formAction}}"
+                  method="post"
+                  class="create-goal__form">
+                <input type="hidden" th:field="*{id}"/>
+                <label for="description">Описание</label>
+                <textarea type="text" id="description" name="goal-name" th:field="*{description}" required
+                          maxlength="10000"></textarea>
+
+                <label for="deadline">Срок</label>
+                <input type="date"
+                       id="deadline"
+                       name="deadline"
+                       th:attr="min=${minDate}, max=${maxDate}"
+                       th:field="*{deadline}" required/>
+
+                <button type="submit">Сохранить</button>
+            </form>
+        </div>
+    </div>
+</main>
+<div style="height: 40px;"></div>
+</body>
+</html>

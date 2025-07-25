@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reflect-Diary</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script th:src="@{/js/script.js}" defer></script>
+</head>
+<body>
+<main>
+    <div class="container">
+        <a th:href="@{/}">
+            <h1>Reflect-Diary</h1>
+        </a>
+        <h2>Создать/Редактировать запись</h2>
+        <form th:action="@{${formAction}}"
+              th:object="${entry}"
+              method="post"
+              class="create-entry__form">
+            <input type="hidden" name="id" th:value="${entry.id}"/>
+            <div class="create-entry__inputs">
+                <div class="create-entry__column">
+
+                    <label for="date">Дата</label>
+                    <input type="date" id="date" th:field="*{date}" required/>
+
+                    <label for="difficulties">Трудности</label>
+                    <input type="text" id="difficulties" th:field="*{difficulties}" maxlength="1000"/>
+
+                    <label for="highlights">Главные события</label>
+                    <input type="text" id="highlights" th:field="*{highlights}" maxlength="1000"/>
+
+                    <label for="mood">Настроение</label>
+                    <select id="mood" th:field="*{mood}" required>
+                        <option value="">-- Выберите настроение --</option>
+                        <option value="HAPPY">😊 Радостное</option>
+                        <option value="SAD">😢 Грустное</option>
+                        <option value="NEUTRAL">😐 Нейтральное</option>
+                    </select>
+
+                    <label for="score">Оцените свой день (1–5)</label>
+                    <input type="number" id="score" min="1" max="5" th:field="*{score}" required/>
+
+                </div>
+
+                <div class="create-entry__column">
+                    <label for="text">Текст</label>
+                    <textarea id="text" class="create-entry__form--text"
+                              th:field="*{mainText}" placeholder="Опишите свой день..." required
+                              maxlength="10000"></textarea>
+
+                    <label for="tomorrowPlan">Планы на завтра</label>
+                    <textarea id="tomorrowPlan" class="create-entry__form--tomorrow"
+                              th:field="*{tomorrowPlan}" placeholder="Планы, цели, задачи..."
+                              maxlength="1000"></textarea>
+                    <div th:if="${questionMissing}">
+                        <p style="color:red">Нет доступного вопроса для рефлексии на сегодня 😢</p>
+                    </div>
+                    <div th:unless="${questionMissing}">
+                        <label>Вопрос для размышления</label>
+                        <p class="create-entry__form--question_text" th:text="${question.text}"></p>
+                        <input type="hidden" th:field="*{reflectionQuestionId}"/>
+                        <label for="questionAnswer"></label>
+                        <textarea class="create-entry__form-question" id="questionAnswer"
+                                  th:field="*{questionAnswer}" placeholder="Ваши мысли..."
+                                  maxlength="1000"></textarea>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>
